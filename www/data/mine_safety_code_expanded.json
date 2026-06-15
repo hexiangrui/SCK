@@ -1,0 +1,3 @@
+[
+  {"id":"gb_011","type":"single_choice","question":"根据GB 16423-2020，矿山企业应建立以（ ）为核心的安全生产责任制。","options":[{"key":"A","text":"矿长"},{"key":"B","text":"主要负责人"},{"key":"C","text":"安全矿长"},{"key":"D","text":"总工程师"}],"answer":["B"],"explanation":"应以主要负责人为核心建立全员安全生产责任制。","source":{"document":"GB 16423-2020 金属非金属矿山安全规程","article":"4.1.1","quote":"矿山企业应建立健全安全生产责任制，以主要负责人为核心"}}
+]
