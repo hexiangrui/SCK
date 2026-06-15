@@ -8,7 +8,22 @@ const UI = {
       !searchLower || t.name.toLowerCase().includes(searchLower) ||
       t.sourceDocuments.some(d => d.toLowerCase().includes(searchLower))
     );
-    list.innerHTML = filtered.map(t => `
+    let html = '';
+    // AI generate panel (only if key configured)
+    if (AI.hasKey()) {
+      html += `<div class="ai-panel">
+        <div class="ai-panel-header">🤖 AI 智能出题</div>
+        <div style="display:flex;gap:6px;padding:0 0 8px">
+          <select id="ai-topic-select" class="ai-select">${TOPIC_INDEX.map(t => `<option value="${t.id}">${t.name}</option>`).join('')}</select>
+          <select id="ai-question-count" class="ai-select" style="max-width:60px">
+            <option value="5">5</option><option value="10">10</option><option value="20">20</option>
+          </select>
+        </div>
+        <button class="btn-primary" style="width:100%;font-size:14px" onclick="window.aiGenerateQuestions()">⚡ 生成新题</button>
+        <p id="ai-gen-status" class="ai-status"></p>
+      </div>`;
+    }
+    html += filtered.map(t => `
       <div class="topic-card" onclick="window.selectTopic('${t.id}')">
         <div class="topic-icon">${t.icon}</div>
         <div class="topic-info">
@@ -18,6 +33,10 @@ const UI = {
         <div class="topic-count">${t.questionCount || 0}题</div>
       </div>
     `).join('');
+    html += `<div style="text-align:center;padding:12px;margin-top:8px">
+      <button style="background:none;border:1px solid var(--border);border-radius:16px;padding:6px 16px;font-size:13px;color:var(--text2)" onclick="window.showSettings()">⚙️ 设置</button>
+    </div>`;
+    list.innerHTML = html;
   },
 
   // ── Screen navigation ──
@@ -58,8 +77,13 @@ const UI = {
       <div class="question-text">${this._escapeHtml(q.question)}</div>`;
 
     if (q.type === 'fill_blank') {
-      html += `<input type="text" class="fill-input" id="fill-answer" placeholder="请输入答案" autocomplete="off">
-        <button class="btn-primary" style="margin-top:12px;width:100%" onclick="window.submitFill()">确认提交</button>`;
+      if (window._aiScoring) {
+        html += `<div style="text-align:center;padding:20px;color:var(--text2)">
+          <div class="ai-loading"></div><p>AI 正在评估你的答案...</p></div>`;
+      } else {
+        html += `<input type="text" class="fill-input" id="fill-answer" placeholder="请输入答案" autocomplete="off">
+          <button class="btn-primary" style="margin-top:12px;width:100%" onclick="window.submitFill()">确认提交</button>`;
+      }
     } else {
       const options = q.options || [];
       const selected = window._currentSelection || [];
@@ -89,9 +113,15 @@ const UI = {
 
   _renderFeedback(q) {
     const isCorrect = window._lastCorrect;
+    const aiFb = window._aiFeedback;
     const cls = isCorrect ? 'feedback-correct' : 'feedback-wrong';
+    let aiInfo = '';
+    if (aiFb && q.type === 'fill_blank') {
+      aiInfo = `<p style="margin-top:4px;font-size:13px">🤖 AI评分：${aiFb.score}分 — ${aiFb.feedback || ''}</p>`;
+    }
     return `<div class="feedback-box show ${cls}">
       <strong>${isCorrect ? '✓ 回答正确！' : '✗ 回答错误'}</strong>
+      ${aiInfo}
       ${!isCorrect ? `<p style="margin-top:4px">正确答案：<b>${q.answer.join('、')}</b></p>` : ''}
       ${q.explanation ? `<p style="margin-top:6px">📖 ${this._escapeHtml(q.explanation)}</p>` : ''}
       ${q.source ? `
@@ -101,6 +131,21 @@ const UI = {
         </div>
       ` : ''}
     </div>`;
+  },
+
+  // ── Setup screen ──
+  renderSetup() {
+    // No dynamic content needed; HTML is static
+  },
+
+  // ── Settings screen ──
+  renderSettings() {
+    const keyInput = document.getElementById('settings-key-input');
+    if (keyInput) keyInput.value = AI.getKey();
+    const cacheCount = document.getElementById('cache-count');
+    if (cacheCount) cacheCount.textContent = AICache.totalCount();
+    const msg = document.getElementById('settings-msg');
+    if (msg) msg.textContent = '';
   },
 
   // ── Result screen ──

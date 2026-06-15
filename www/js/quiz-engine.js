@@ -41,21 +41,42 @@ const Engine = {
 
   getProgress() { return { current: this.currentIndex + 1, total: this.currentQuestions.length }; },
 
-  // ── Check answer ──
+  // ── Check answer (sync, for choice types) ──
   checkAnswer(question, userAnswer) {
     if (!question || !userAnswer) return false;
     const correct = question.answer;
     if (question.type === 'fill_blank') {
-      // Compare normalized text
-      return correct.some(a =>
+      // Try exact match first
+      const exact = correct.some(a =>
         userAnswer.some(ua => ua.trim().toLowerCase() === a.trim().toLowerCase())
       );
+      return exact; // exact match wins; AI scoring handled async via checkAnswerAI
     }
     // For choice types: compare sorted arrays
     const sortedUser = [...userAnswer].sort();
     const sortedCorrect = [...correct].sort();
     return sortedUser.length === sortedCorrect.length &&
            sortedUser.every((v, i) => v === sortedCorrect[i]);
+  },
+
+  // ── AI-powered scoring for fill-blank (async) ──
+  async checkAnswerAI(question, userAnswer) {
+    if (!question || !userAnswer || question.type !== 'fill_blank') {
+      return { score: 0, isCorrect: false, feedback: '' };
+    }
+    // First try exact match
+    const correct = question.answer;
+    const exact = correct.some(a =>
+      userAnswer.some(ua => ua.trim().toLowerCase() === a.trim().toLowerCase())
+    );
+    if (exact) return { score: 100, isCorrect: true, feedback: '完全正确！' };
+    // Try AI scoring
+    if (!AI.hasKey()) return { score: 0, isCorrect: false, feedback: '答案不正确' };
+    try {
+      return await AI.scoreAnswer(question.question, userAnswer[0] || '', correct);
+    } catch(e) {
+      return { score: 0, isCorrect: false, feedback: '评分失败，请重试' };
+    }
   },
 
   // ── Navigate ──

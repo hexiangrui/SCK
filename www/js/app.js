@@ -4,6 +4,7 @@ window._currentSelection = [];
 window._showFeedback = false;
 window._lastCorrect = false;
 window._submitted = false;
+window._aiScoring = false; // true when waiting for AI fill-blank score
 let TOPIC_INDEX = [];
 
 // ── Init ──
@@ -12,9 +13,15 @@ async function init() {
     const resp = await fetch('data/index.json');
     TOPIC_INDEX = await resp.json();
   } catch(e) {
-    TOPIC_INDEX = []; // Will show empty state
+    TOPIC_INDEX = [];
   }
-  UI.renderTopics();
+  // Check API Key on first launch
+  if (!AI.hasKey()) {
+    UI.show('setup');
+  } else {
+    UI.show('home');
+    UI.renderTopics();
+  }
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
@@ -60,21 +67,47 @@ window.toggleMulti = function(key) {
 
 window.submitAnswer = function() {
   if (window._currentSelection.length === 0) return;
-  window._submitted = true;
   const q = Engine.getCurrent();
   if (!q) return;
+
+  // Fill-blank with AI scoring (async)
+  if (q.type === 'fill_blank' && AI.hasKey() && !Engine.checkAnswer(q, window._currentSelection)) {
+    window._submitted = true;
+    window._aiScoring = true;
+    UI.renderQuestion(); // show loading state
+    Engine.checkAnswerAI(q, window._currentSelection).then(result => {
+      window._lastCorrect = result.isCorrect;
+      window._showFeedback = true;
+      window._aiScoring = false;
+      window._aiFeedback = result;
+      // Record
+      Storage.recordAnswer(window._currentTopicId, result.isCorrect);
+      if (!result.isCorrect) Storage.addWrongId(window._currentTopicId, q.id);
+      else Storage.removeWrongId(window._currentTopicId, q.id);
+      if (Engine.mode === 'exam') Engine.recordExamAnswer(q.id, window._currentSelection, result.isCorrect);
+      UI.renderQuestion();
+    }).catch(() => {
+      window._lastCorrect = false;
+      window._showFeedback = true;
+      window._aiScoring = false;
+      window._aiFeedback = null;
+      Storage.recordAnswer(window._currentTopicId, false);
+      Storage.addWrongId(window._currentTopicId, q.id);
+      UI.renderQuestion();
+    });
+    return;
+  }
+
+  window._submitted = true;
   const isCorrect = Engine.checkAnswer(q, window._currentSelection);
   window._lastCorrect = isCorrect;
   window._showFeedback = true;
+  window._aiFeedback = null;
 
-  // Record
-  if (Engine.mode === 'exam') {
-    Engine.recordExamAnswer(q.id, window._currentSelection, isCorrect);
-  }
+  if (Engine.mode === 'exam') Engine.recordExamAnswer(q.id, window._currentSelection, isCorrect);
   Storage.recordAnswer(window._currentTopicId, isCorrect);
   if (!isCorrect) Storage.addWrongId(window._currentTopicId, q.id);
   else Storage.removeWrongId(window._currentTopicId, q.id);
-
   UI.renderQuestion();
 };
 
@@ -139,6 +172,77 @@ window.reviewWrong = function() {
 window.showStats = function() {
   UI.show('stats');
   UI.renderStats();
+};
+
+// ── API Key setup ──
+window.saveApiKey = function() {
+  const input = document.getElementById('api-key-input');
+  const key = (input ? input.value : '').trim();
+  if (!key) { alert('请输入API Key'); return; }
+  AI.saveKey(key);
+  UI.show('home');
+  UI.renderTopics();
+};
+
+window.skipSetup = function() {
+  UI.show('home');
+  UI.renderTopics();
+};
+
+window.showSetup = function() { UI.show('setup'); UI.renderSetup(); };
+window.showSettings = function() { UI.show('settings'); UI.renderSettings(); };
+
+window.testApiKey = async function() {
+  const msg = document.getElementById('settings-msg');
+  msg.textContent = '测试中...';
+  msg.style.color = '#5f6368';
+  const ok = await AI.testKey();
+  msg.textContent = ok ? '✓ 连接成功' : '✗ 连接失败';
+  msg.style.color = ok ? '#0d904f' : '#d93025';
+};
+
+window.deleteApiKey = function() {
+  AI.deleteKey();
+  UI.renderSettings();
+};
+
+// ── AI Generate ──
+window.aiGenerateQuestions = async function() {
+  const select = document.getElementById('ai-topic-select');
+  const countEl = document.getElementById('ai-question-count');
+  const status = document.getElementById('ai-gen-status');
+  if (!select || !countEl) return;
+  const topicId = select.value;
+  const count = parseInt(countEl.value) || 5;
+  if (!topicId) { alert('请选择专题'); return; }
+  status.textContent = 'AI 正在生成题目...';
+  status.style.color = '#1a73e8';
+  try {
+    const questions = await AI.generateQuestions(topicId, count);
+    status.textContent = `✓ 生成完成！${questions.length} 道新题已加入题库`;
+    status.style.color = '#0d904f';
+    // Merge into active topic if same; update counts
+    const topic = TOPIC_INDEX.find(t => t.id === topicId);
+    if (topic) {
+      const cached = AICache.getQuestions(topicId);
+      topic.questionCount = (DataCache.get(topicId)?.length || 0) + cached.length;
+    }
+  } catch(e) {
+    status.textContent = e.message === 'NO_KEY' ? '请先设置API Key' :
+                         e.message === 'INVALID_KEY' ? 'API Key无效，请重新设置' : `生成失败: ${e.message}`;
+    status.style.color = '#d93025';
+  }
+};
+
+// ── Settings save ──
+window.saveSettingsKey = function() {
+  const input = document.getElementById('settings-key-input');
+  if (!input || !input.value.trim()) return;
+  AI.saveKey(input.value.trim());
+  UI.renderSettings();
+  const msg = document.getElementById('settings-msg');
+  msg.textContent = '✓ 已保存';
+  msg.style.color = '#0d904f';
 };
 
 // ── Boot ──

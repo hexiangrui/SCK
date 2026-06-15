@@ -61,7 +61,47 @@
   <div id="stats-content" class="stats-content"></div>
 </div>
 
+<div id="screen-setup" class="screen">
+  <div class="setup-body">
+    <div class="setup-icon">🔑</div>
+    <h2>配置 DeepSeek API Key</h2>
+    <p class="setup-desc">用于 AI 智能出题和答案评分。<br>Key 仅保存在您设备本地，不会上传。</p>
+    <input type="password" id="api-key-input" class="setup-input" placeholder="粘贴你的 DeepSeek API Key (sk-...)">
+    <button class="btn-primary setup-btn" onclick="window.saveApiKey()">开始使用</button>
+    <button class="btn-outline setup-btn" onclick="window.skipSetup()" style="margin-top:8px">跳过，使用离线模式</button>
+    <p class="setup-help"><a href="https://platform.deepseek.com/api_keys" target="_blank">如何获取 API Key？</a></p>
+  </div>
+</div>
+
+<div id="screen-settings" class="screen">
+  <div class="header"><button class="btn-back" onclick="window.goHome()">← 返回</button><h2>设置</h2></div>
+  <div class="settings-content">
+    <div class="settings-card">
+      <h3>🔑 DeepSeek API Key</h3>
+      <p class="settings-hint">用于 AI 出题和智能评分</p>
+      <input type="password" id="settings-key-input" class="setup-input" placeholder="sk-...">
+      <div class="settings-actions">
+        <button class="btn-primary" onclick="window.saveSettingsKey()">保存</button>
+        <button class="btn-outline" onclick="window.testApiKey()">测试连接</button>
+        <button class="btn-outline" style="color:#d93025;border-color:#d93025" onclick="window.deleteApiKey()">删除</button>
+      </div>
+      <p id="settings-msg" class="settings-msg"></p>
+    </div>
+    <div class="settings-card">
+      <h3>📊 缓存管理</h3>
+      <p class="settings-hint">AI 生成的题目已缓存 <b id="cache-count">0</b> 道</p>
+      <button class="btn-outline" onclick="if(confirm('确认清除？')){Object.keys(AICache._getIndex()).forEach(k=>AICache.clearTopic(k));window.showSettings();}">清除AI缓存</button>
+    </div>
+    <div class="settings-card">
+      <h3>ℹ️ 关于</h3>
+      <p class="settings-hint">矿山规程学习宝 | 847 基础题 + AI 智能出题</p>
+    </div>
+  </div>
+</div>
+
 <script src="js/storage.js"></script>
+<script src="js/ai-cache.js"></script>
+<script src="js/ai.js"></script>
 <script src="js/quiz-engine.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/app.js"></script>
