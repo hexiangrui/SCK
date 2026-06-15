@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1a73e8">
+<title>矿山规程学习宝</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ====== 首页：专题选择 ====== -->
+<div id="screen-home" class="screen active">
+  <div class="header">
+    <h1>矿山规程学习宝</h1>
+    <p class="subtitle">金属非金属矿山规程 · 标准 · 题库</p>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="搜索题目..." oninput="window.searchQuestions(this.value)">
+  </div>
+  <div id="topic-list" class="topic-list"></div>
+</div>
+
+<!-- ====== 答题页面 ====== -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <button class="btn-back" onclick="window.goHome()">← 返回</button>
+    <span id="quiz-title" class="quiz-title"></span>
+    <span id="quiz-progress" class="quiz-progress"></span>
+  </div>
+  <div class="quiz-body">
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="practice" onclick="window.switchMode('practice')">顺序练习</button>
+      <button class="mode-tab" data-mode="exam" onclick="window.switchMode('exam')">模拟考试</button>
+      <button class="mode-tab" data-mode="wrong" onclick="window.switchMode('wrong')">错题重做</button>
+      <button class="mode-tab" data-mode="bookmark" onclick="window.switchMode('bookmark')">收藏</button>
+    </div>
+    <div id="quiz-content" class="quiz-content"></div>
+  </div>
+</div>
+
+<!-- ====== 成绩页面 ====== -->
+<div id="screen-result" class="screen">
+  <div class="result-body">
+    <div id="result-score" class="result-score"></div>
+    <div id="result-detail" class="result-detail"></div>
+    <button class="btn-primary" onclick="window.goHome()">返回首页</button>
+    <button class="btn-outline" onclick="window.reviewWrong()">查看错题</button>
+  </div>
+</div>
+
+<!-- ====== 统计页面 ====== -->
+<div id="screen-stats" class="screen">
+  <div class="header">
+    <button class="btn-back" onclick="window.goHome()">← 返回</button>
+    <h2>学习统计</h2>
+  </div>
+  <div id="stats-content" class="stats-content"></div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/quiz-engine.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "kuangshan-guicheng-app",
+  "version": "1.0.0",
+  "description": "矿山规程学习宝 - 金属非金属矿山规程标准题库APP",
+  "scripts": {
+    "dev": "npx http-server -p 8080 -c-1",
+    "build:capacitor": "npx cap sync android"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  }
+}

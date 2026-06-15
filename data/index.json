@@ -1,0 +1,14 @@
+[
+  {"id":"laws","name":"安全生产法律法规","shortName":"法律法规","icon":"📜","questionCount":10,"sourceDocuments":["中华人民共和国安全生产法（2021年修订）","中华人民共和国消防法（2021版）","中华人民共和国特种设备安全法","中华人民共和国职业病防治法"],"file":"laws.json"},
+  {"id":"department_rules","name":"部门规章","shortName":"部门规章","icon":"📋","questionCount":8,"sourceDocuments":["16号令 安全生产事故隐患排查治理暂行规定","生产安全事故信息报告和处置办法"],"file":"department_rules.json"},
+  {"id":"major_hazards","name":"重大事故隐患判定标准","shortName":"重大隐患","icon":"⚠️","questionCount":10,"sourceDocuments":["金属非金属矿山重大事故隐患判定标准","金属非金属矿山重大事故隐患判定标准（解读）","《金属非金属矿山重大事故隐患判定标准补充情形》解读"],"file":"major_hazards.json"},
+  {"id":"blasting_safety","name":"爆破安全规程","shortName":"爆破安全","icon":"💥","questionCount":10,"sourceDocuments":["GB 6722-2014 爆破安全规程"],"file":"blasting_safety.json"},
+  {"id":"mine_safety_code","name":"金属非金属矿山安全规程","shortName":"矿山安全规程","icon":"⛏️","questionCount":10,"sourceDocuments":["GB 16423-2020 金属非金属矿山安全规程"],"file":"mine_safety_code.json"},
+  {"id":"six_systems","name":"矿山六大系统及5G通信","shortName":"六大系统","icon":"📡","questionCount":8,"sourceDocuments":["监测监控/人员定位/通信联络/压风自救/供水施救/紧急避险建设规范及技术要求","KA 32-2026 5G通信系统技术规范"],"file":"six_systems.json"},
+  {"id":"ventilation_water","name":"通风与防治水","shortName":"通风防治水","icon":"💨","questionCount":7,"sourceDocuments":["KA 30-2026 通风技术规范","金属非金属地下矿山防治水安全技术规范"],"file":"ventilation_water.json"},
+  {"id":"hoisting_transport","name":"提升运输与特种设备","shortName":"提升运输","icon":"🏗️","questionCount":7,"sourceDocuments":["AQ 2068 提升系统检查检测规范","AQ 2070 无轨运人车辆安全技术","金属非金属地下矿山特种设备"],"file":"hoisting_transport.json"},
+  {"id":"inspection_testing","name":"检测检验规范","shortName":"检测检验","icon":"🔬","questionCount":6,"sourceDocuments":["AQT 2072 电力绝缘安全工器具","AQT 2073 高压开关设备","AQT 2075 在用设备设施检测检验目录"],"file":"inspection_testing.json"},
+  {"id":"support_engineering","name":"支护工程技术","shortName":"支护工程","icon":"🏔️","questionCount":6,"sourceDocuments":["GB50086 锚杆与喷射混凝土","矿用锚索MTT942-2025","缝管锚杆MTT285-2025"],"file":"support_engineering.json"},
+  {"id":"eight_measures","name":"八条硬措施","shortName":"硬措施","icon":"🛡️","questionCount":25,"sourceDocuments":["安委〔2024〕1号 硬措施","应知应会70题","学习抽考A卷"],"file":"eight_measures.json"},
+  {"id":"standardization_design","name":"安全标准化与采场设计","shortName":"标准化","icon":"📐","questionCount":8,"sourceDocuments":["安全生产标准化管理体系","安全标准化实施指南（地下矿山+采掘施工）","采场单体设计编制指南","广西采掘工作面作业规程指导意见"],"file":"standardization_design.json"}
+]

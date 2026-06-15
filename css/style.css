@@ -1,0 +1,87 @@
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#1a73e8;--primary-dark:#1557b0;--success:#0d904f;--danger:#d93025;
+  --warning:#f9ab00;--bg:#f5f5f5;--card:#fff;--text:#202124;--text2:#5f6368;
+  --border:#dadce0;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.12);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-tap-highlight-color:transparent;user-select:none}
+.screen{display:none;min-height:100vh;padding-bottom:20px}
+.screen.active{display:block}
+.header{padding:24px 16px 12px;text-align:center;background:linear-gradient(135deg,#1a73e8,#4285f4);color:#fff}
+.header h1{font-size:22px;font-weight:700}
+.header h2{font-size:18px}
+.subtitle{font-size:13px;opacity:.85;margin-top:4px}
+
+/* ── 首页专题列表 ── */
+.search-bar{padding:12px 16px}
+.search-bar input{width:100%;padding:10px 16px;border:1px solid var(--border);border-radius:24px;font-size:15px;outline:none;background:var(--card)}
+.search-bar input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(26,115,232,.2)}
+.topic-list{padding:0 12px}
+.topic-card{display:flex;align-items:center;padding:16px;margin:6px 0;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.topic-card:active{transform:scale(.98);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.topic-icon{font-size:32px;margin-right:14px;flex-shrink:0}
+.topic-info{flex:1;min-width:0}
+.topic-name{font-size:16px;font-weight:600}
+.topic-sources{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.topic-count{font-size:13px;color:var(--primary);font-weight:600;white-space:nowrap;margin-left:8px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--border);z-index:100}
+.bottom-nav button{flex:1;padding:10px 0;border:none;background:none;font-size:12px;color:var(--text2);cursor:pointer;text-align:center}
+.bottom-nav button.active{color:var(--primary)}
+
+/* ── 答题页 ── */
+.quiz-header{position:sticky;top:0;z-index:50;display:flex;align-items:center;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--border);gap:10px}
+.quiz-title{font-size:15px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.quiz-progress{font-size:13px;color:var(--text2);white-space:nowrap}
+.btn-back{background:none;border:none;font-size:15px;color:var(--primary);cursor:pointer;padding:4px 8px}
+.mode-tabs{display:flex;padding:8px 8px 0;gap:4px;overflow-x:auto}
+.mode-tab{flex-shrink:0;padding:8px 14px;border:1px solid var(--border);border-radius:20px;background:var(--card);font-size:13px;cursor:pointer;transition:all .2s}
+.mode-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.quiz-content{padding:16px}
+.question-card{background:var(--card);border-radius:var(--radius);padding:20px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.question-type{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin-bottom:8px;font-weight:600}
+.type-single{background:#e8f0fe;color:#1a73e8}
+.type-multi{background:#fce8e6;color:#d93025}
+.type-true{background:#e6f4ea;color:#0d904f}
+.type-fill{background:#fef7e0;color:#e37400}
+.question-text{font-size:16px;line-height:1.7;margin-bottom:16px}
+.option-item{display:flex;align-items:flex-start;padding:12px 14px;margin:6px 0;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;font-size:15px}
+.option-item:active{background:#f0f4ff}
+.option-item.selected{border-color:var(--primary);background:#e8f0fe}
+.option-item.correct{border-color:var(--success);background:#e6f4ea}
+.option-item.wrong{border-color:var(--danger);background:#fce8e6}
+.option-key{font-weight:700;margin-right:10px;min-width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:13px;background:#eee;flex-shrink:0}
+.selected .option-key{background:var(--primary);color:#fff}
+.correct .option-key{background:var(--success);color:#fff}
+.wrong .option-key{background:var(--danger);color:#fff}
+.fill-input{width:100%;padding:12px;font-size:16px;border:2px solid var(--border);border-radius:10px;outline:none;margin:6px 0}
+.fill-input:focus{border-color:var(--primary)}
+.feedback-box{margin-top:12px;padding:14px;border-radius:10px;font-size:14px;line-height:1.7;display:none}
+.feedback-box.show{display:block}
+.feedback-correct{background:#e6f4ea;border:1px solid #a8dab5}
+.feedback-wrong{background:#fce8e6;border:1px solid #f5c6cb}
+.source-block{margin-top:10px;padding:10px 12px;background:#fff;border-radius:8px;border-left:3px solid var(--primary)}
+.source-label{font-size:12px;color:var(--text2);margin-bottom:4px}
+.source-quote{font-size:13px;color:var(--text);font-style:italic}
+.btn-nav{display:flex;gap:10px;padding:0 16px 100px;justify-content:center}
+.btn-primary,.btn-outline,.btn-bookmark{padding:12px 28px;border-radius:24px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{background:var(--card);color:var(--primary);border:2px solid var(--primary)}
+.btn-bookmark{background:none;border:none;font-size:20px;cursor:pointer;padding:8px}
+
+/* ── 成绩页 ── */
+.result-body{text-align:center;padding:60px 20px}
+.result-score{font-size:64px;font-weight:800;margin-bottom:8px}
+.result-detail{font-size:14px;color:var(--text2);margin-bottom:24px;line-height:1.8}
+
+/* ── 统计页 ── */
+.stats-content{padding:16px}
+.stat-item{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;margin:6px 0;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow)}
+.stat-name{font-size:15px;font-weight:500}
+.stat-bar{flex:1;height:8px;background:#eee;border-radius:4px;margin:0 12px;overflow:hidden}
+.stat-bar-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .3s}
+.stat-percent{font-size:14px;font-weight:600;color:var(--primary);min-width:40px;text-align:right}
+
+/* ── 空状态 ── */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text2)}
+.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:15px}

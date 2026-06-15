@@ -1,0 +1,9 @@
+{
+  "appId": "com.kuangshan.guicheng",
+  "appName": "矿山规程学习宝",
+  "webDir": ".",
+  "server": { "androidScheme": "https" },
+  "android": {
+    "allowMixedContent": true
+  }
+}
